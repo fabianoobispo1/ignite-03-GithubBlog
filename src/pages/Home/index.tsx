@@ -1,14 +1,11 @@
-
-import {
-
-} from './styles'
+import { PersonInfo } from './components/PersonInfo'
+import { HomeContainer } from './styles'
 
 export function Home() {
-
-
   return (
-    <div>
-      <h1>Home</h1>
-    </div>
+    <HomeContainer>
+      <PersonInfo />
+      <h1>aaa</h1>
+    </HomeContainer>
   )
 }
