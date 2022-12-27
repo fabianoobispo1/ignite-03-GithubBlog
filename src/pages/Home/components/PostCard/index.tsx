@@ -1,16 +1,20 @@
 import React from 'react'
-
+import { IPost } from '../../index'
 import { PostCardContainer } from './styles'
 
-export function PostCard() {
+interface IPostCard {
+  post: IPost
+}
+export function PostCard({ post }: IPostCard) {
+  const { createdAt, body, title, number } = post
   return (
-    <PostCardContainer to={'#'}>
+    <PostCardContainer to={`/${number}`}>
       <header>
-        <h1>titulo</h1>
-        <span>data</span>
+        <h1>{title}</h1>
+        <span>{createdAt}</span>
       </header>
       <main>
-        <p>conteudo</p>
+        <p>{body}</p>
       </main>
     </PostCardContainer>
   )
