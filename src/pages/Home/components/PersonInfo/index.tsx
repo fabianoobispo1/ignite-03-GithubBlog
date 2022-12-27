@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { PersonInfoContainer } from './styles'
 
 import { api } from '../../../../lib/axios'
-import { Skeleton } from './Skeleton'
 
 interface IUserInfo {
   name: string
@@ -20,10 +19,7 @@ export function PersonInfo() {
   const [isLoading, setIsLoading] = useState(true)
 
   async function fetchUsers() {
-    // simular açao de 2 segundos
-    await new Promise((resolve) => setTimeout(resolve, 2000))
 
-    // const response = await api.get('users/pedr0d1as')
     const response = await api.get('users/fabianoobispo1')
 
     const { name, followers, login, company, html_url, avatar_url, bio } =
@@ -47,10 +43,7 @@ export function PersonInfo() {
 
   return (
     <PersonInfoContainer>
-      {isLoading ? (
-        <Skeleton />
-      ) : (
-        <>
+    
           <img
             width={148}
             height={148}
@@ -83,8 +76,8 @@ export function PersonInfo() {
               </span>
             </footer>
           </div>
-        </>
-      )}
+        
+      
     </PersonInfoContainer>
   )
 }

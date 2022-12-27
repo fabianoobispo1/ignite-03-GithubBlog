@@ -12,7 +12,7 @@ import {
 export interface IPost {
   title: string
   body: string
-  createdAt: string
+  created_at: string
   number: string
 }
 

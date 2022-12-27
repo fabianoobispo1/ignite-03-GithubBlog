@@ -1,3 +1,15 @@
+import React, { useEffect, useState } from "react";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+
+import ReactMarkdown from "react-markdown";
+import { useParams } from "react-router-dom";
+
+import remarkGfm from "remark-gfm";
+import { api } from "../../lib/axios";
+import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
+
+import { formatDistanceToNow } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import {
   NavButton,
   PostDetailCard,
@@ -5,39 +17,79 @@ import {
   PostDetailContent,
 } from './styles'
 
+interface IPostDetail {
+  title: string;
+  comments: number;
+  createdAt: string;
+  githubUsername: string;
+  url: string;
+  body: string;
+}
+
 export function PostDetail() {
+  const [post, setPost] = useState<IPostDetail>({} as IPostDetail);
+  const { id } = useParams();
+
+  async function fetchPost() {
+    const response = await api.get(
+      `/repos/fabianoobispo1/ignite-03-GithubBlog/issues/${id}`
+    );
+    console.log( response.data)
+    const { title, comments, created_at, user, html_url, body } = response.data;
+    const newPostObj = {
+      title,
+      githubUsername: user.login,
+      comments,
+      createdAt: formatDistanceToNow(new Date(created_at), {
+        locale: ptBR,
+        addSuffix: true,
+      }),
+      url: html_url,
+      body,
+    };
+    console.log(newPostObj)
+    setPost(newPostObj);
+  }
+
+  useEffect(() => {
+    fetchPost();
+  }, []);
+
+
   return (
     <PostDetailContainer>
       <PostDetailCard>
         <header>
           <NavButton to="/" type="button">
             <i className="fa-solid fa-chevron-left"></i>
-            Back
+            Voltar
           </NavButton>
-          <a href={'#'} target="_blank" rel="noreferrer">
-            See on Github
+          <a href={post.url}target="_blank" rel="noreferrer">
+            Ver no Github
             <i className="fa-solid fa-arrow-up-right-from-square"></i>
           </a>
         </header>
         <div>
-          <h1>titulo</h1>
+          <h1>{post.title}</h1>
         </div>
         <footer>
           <span>
             <i className="fa-brands fa-github"></i>
-            name
+            {post.githubUsername}
           </span>
           <span>
             <i className="fa-solid fa-calendar"></i>
-            data
+            {post.createdAt}
           </span>
           <span>
-            <i className="fa-solid fa-comment"></i>0 Comments
+            <i className="fa-solid fa-comment"></i>{post.comments} Comments
           </span>
         </footer>
       </PostDetailCard>
       <PostDetailContent>
-        <div>textoo</div>
+        <div>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.body}</ReactMarkdown>
+        </div>
       </PostDetailContent>
     </PostDetailContainer>
   )
